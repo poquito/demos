@@ -1,29 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
-<project name="SampleAntBuild" default="build" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="SampleAntBuild"
+         default="compile"
+         xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<property name="target.dir" value="${basedir}/.target" />
-	<property name="ivy.jar.dir" value="${target.dir}/.target/ivy" />
+	<property name="ivy.jar.dir" value="${target.dir}/ivy" />
 	<property name="ivy.install.version" value="2.4.0" />
-	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	<property name="ivy.jar.file"
+	          value="${ivy.jar.dir}/ivy-${ivy.install.version}.jar" />
 	<property name="src.dir" value="src" />
+	<property name="dest.dir" value="${target.dir}/classes" />
+
+	<available file="${ivy.jar.file}" property="skip.download" />
 
 	<target name="download-ivy" unless="skip.download">
 		<mkdir dir="${ivy.jar.dir}" />
 		<echo message="installing ivy..." />
-		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true" />
+		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+		     dest="${ivy.jar.file}"
+		     usetimestamp="true" />
 	</target>
 
-	<target name="install-ivy" depends="download-ivy" description="--> install ivy">
+	<target name="install-ivy"
+	        depends="download-ivy"
+	        description="--> install ivy">
+
 		<path id="ivy.lib.path">
 			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
 		</path>
-		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+
+		<taskdef resource="org/apache/ivy/ant/antlib.xml"
+		         uri="antlib:org.apache.ivy.ant"
+		         classpathref="ivy.lib.path" />
+
 	</target>
 
-	<target name="build" depends="install-ivy">
+	<target name="initialize" depends="install-ivy">
 		<echo>building project</echo>
-		<echoproperties />
+		<delete dir="${dest.dir}" failonerror="false" />
+		<mkdir dir="${dest.dir}" />
+	</target>
+
+	<target name="compile" depends="initialize">
+
+		<javac srcdir="${src.dir}"
+		       destdir="${dest.dir}"
+		       debug="true"
+		       encoding="utf-8"
+		       includeantruntime="false">
+		</javac>
+
+		<copy todir="${dest.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
 	</target>
 </project>
 
