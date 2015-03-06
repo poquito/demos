@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project name="SampleAntBuild" default="build">
+	<target name="build">
+		<echo>building project</echo>
+		<echoproperties/>
+	</target>
+</project>
+
