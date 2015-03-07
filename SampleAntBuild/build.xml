@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
 <project name="SampleAntBuild"
-         default="compile"
+         default="package"
          xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property file="build.properties" />
 
-	<property name="target.dir" value="${basedir}/.target" />
 	<property name="ivy.jar.dir" value="${target.dir}/ivy" />
 	<property name="ivy.install.version" value="2.4.0" />
 	<property name="ivy.jar.file"
 	          value="${ivy.jar.dir}/ivy-${ivy.install.version}.jar" />
-	<property name="src.dir" value="src" />
-	<property name="dest.dir" value="${target.dir}/classes" />
 
 	<available file="${ivy.jar.file}" property="skip.download" />
 
@@ -37,23 +35,41 @@
 	</target>
 
 	<target name="initialize" depends="install-ivy">
-		<echo>building project</echo>
-		<delete dir="${dest.dir}" failonerror="false" />
-		<mkdir dir="${dest.dir}" />
+		<delete dir="${src.output.dir}" failonerror="false" />
+		<mkdir dir="${src.output.dir}" />
+		<ivy:retrieve pattern="${target.dir}/[type]s/[conf]/[artifact]-[revision].[ext]" />
+		<available file="${test.dir}" property="test.dir.available" />
+		<echoproperties prefix="ivy"/>
 	</target>
 
 	<target name="compile" depends="initialize">
-
 		<javac srcdir="${src.dir}"
-		       destdir="${dest.dir}"
+		       destdir="${src.output.dir}"
 		       debug="true"
 		       encoding="utf-8"
 		       includeantruntime="false">
 		</javac>
-
-		<copy todir="${dest.dir}">
+		<copy todir="${src.output.dir}">
 			<fileset dir="${src.dir}" excludes="**/*.java" />
 		</copy>
 	</target>
+	
+	<target name="test" depends="compile" if="test.dir.available">
+		<javac srcdir="${test.dir}"
+		       destdir="${test.output.dir}"
+		       debug="true"
+		       encoding="utf-8"
+		       includeantruntime="false">
+		</javac>
+		<copy todir="${test.output.dir}">
+			<fileset dir="${test.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+	
+	<target name="package" depends="compile">
+		<property name="ext" value="jar"/>
+		<jar basedir="${src.output.dir}" destfile="${target.dir}/${ivy.module}.${ext}"/>
+	</target>
+	
 </project>
 
