@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info
+        organisation="at.poquito"
+        module="SampleAntBuild"
+        status="integration">
+	</info>
+	
+	<configurations>
+		<conf name="default" extends="master"/>
+		<conf name="master"/>
+		<conf name="test"/>
+	</configurations>
+	
+	<publications>
+	<artifact name="SampleAntBuild" type="jar" conf="master"/>
+	</publications>
+	
+	<dependencies>
+		<dependency org="junit" name="junit" rev="4.12" conf="test->default"/>
+		<dependency org="org.mockito" name="mockito-all" rev="1.10.+" conf="test->default"/>
+	</dependencies>
+</ivy-module>
