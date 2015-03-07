@@ -14,7 +14,6 @@
 
 	<target name="download-ivy" unless="skip.download">
 		<mkdir dir="${ivy.jar.dir}" />
-		<echo message="installing ivy..." />
 		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
 		     dest="${ivy.jar.file}"
 		     usetimestamp="true" />
@@ -39,7 +38,6 @@
 		<mkdir dir="${src.output.dir}" />
 		<ivy:retrieve pattern="${target.dir}/[type]s/[conf]/[artifact]-[revision].[ext]" />
 		<available file="${test.dir}" property="test.dir.available" />
-		<echoproperties prefix="ivy"/>
 	</target>
 
 	<target name="compile" depends="initialize">
