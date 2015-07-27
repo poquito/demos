@@ -34,6 +34,7 @@
 	</target>
 
 	<target name="initialize" depends="install-ivy">
+		<echo>this is the develop branch</echo>
 		<delete dir="${src.output.dir}" failonerror="false" />
 		<mkdir dir="${src.output.dir}" />
 		<ivy:retrieve pattern="${target.dir}/[type]s/[conf]/[artifact]-[revision].[ext]" />
