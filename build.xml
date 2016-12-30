@@ -1,0 +1,5 @@
+<project name="demo" default="build">
+  <target name="build">
+    <echo>run ant in module folders</echo>
+  </target>
+</project>
